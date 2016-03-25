@@ -1,7 +1,8 @@
 language: node_js
 services:
-  - docker
+  - postgres
 node_js:
   - "node"
-before_test: docker-compose build && docker-compose up -d
+before_script:
+  - psql -c 'create database oauth2_server;' -U postgres
 after_script: npm run coverage
