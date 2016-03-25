@@ -1,18 +1,20 @@
+/* global describe, it, before */
+
 const expect = require('chai').expect
 const helper = require('./test-helper')
 const Client = require('../lib/client')
 
 require('chai').should()
 
-describe('client', function () {
+describe('Client', function () {
   before(function (done) {
     helper.resetDb(done)
   })
 
   it('should allow a new client to be created', function (done) {
-    Client.create({
-      name: 'lift security'
-    }).then(client => {
+    Client.objects.create({
+      name: 'foo security'
+    }).then((client) => {
       client.client_id.should.match(/[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}/)
       client.client_secret.should.match(/[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}/)
 
@@ -27,11 +29,48 @@ describe('client', function () {
   })
 
   it('should not allow two clients with the same name to be created', function (done) {
-    Client.create({
-      name: 'lift security'
-    }).catch(err => {
+    Client.objects.create({
+      name: 'foo security'
+    }).catch((err) => {
       err.message.should.match(/duplicate key/)
       return done()
+    })
+  })
+
+  it('allows a client to be fetched based on client_id and client_secret', function (done) {
+    var assertClient = null
+
+    Client.objects.create({
+      name: 'bar security'
+    }).then((client) => {
+      assertClient = client
+      return Client.objects.get({
+        client_id: client.client_id,
+        client_secret: client.client_secret
+      })
+    }).then((client) => {
+      client.should.deep.equal(assertClient)
+      return done()
+    })
+  })
+
+  describe('tokens', function () {
+    it('allows a token associated with a client to be created', function (done) {
+      var assertClient = null
+
+      Client.objects.get({
+        name: 'bar security'
+      }).then((client) => {
+        assertClient = client
+        return client.generateToken('ben@example.com')
+      }).then((token) => {
+        token.access_token.should.match(/[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}/)
+        token.refresh_token.should.match(/[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}/)
+        return token.client()
+      }).then((client) => {
+        client.should.deep.equal(assertClient)
+        return done()
+      })
     })
   })
 })

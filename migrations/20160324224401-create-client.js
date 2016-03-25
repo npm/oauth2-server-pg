@@ -1,7 +1,7 @@
-var dbm = global.dbm || require('db-migrate');
-var type = dbm.dataType;
+var dbm = global.dbm || require('db-migrate')
+var type = dbm.dataType
 
-exports.up = function(db, callback) {
+exports.up = function (db, callback) {
   db.createTable('clients', {
     columns: {
       id: { type: type.INTEGER, primaryKey: true, autoIncrement: true },
@@ -21,8 +21,8 @@ exports.up = function(db, callback) {
       })
     })
   })
-};
+}
 
-exports.down = function(db, callback) {
+exports.down = function (db, callback) {
   db.dropTable('clients', callback)
-};
+}
