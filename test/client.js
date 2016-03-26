@@ -3,6 +3,7 @@
 const expect = require('chai').expect
 const helper = require('./test-helper')
 const Client = require('../lib/client')
+const Token = require('../lib/token')
 
 require('chai').should()
 
@@ -56,19 +57,15 @@ describe('Client', function () {
 
   describe('tokens', function () {
     it('allows a token associated with a client to be created', function (done) {
-      var assertClient = null
-
-      Client.objects.get({
-        name: 'bar security'
-      }).then((client) => {
-        assertClient = client
-        return client.generateToken('ben@example.com')
+      Token.objects.create({
+        client: Client.objects.get({name: 'bar security'}),
+        user_email: 'some@email.com'
       }).then((token) => {
         token.access_token.should.match(/[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}/)
         token.refresh_token.should.match(/[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}/)
-        return token.client()
+        return token.client
       }).then((client) => {
-        client.should.deep.equal(assertClient)
+        client.name.should.equal('bar security')
         return done()
       })
     })
