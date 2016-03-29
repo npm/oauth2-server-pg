@@ -20,7 +20,7 @@ describe('OAuth2 Server', function () {
     })
   })
 
-  describe('oauth', function () {
+  describe('oauth: client credentials flow', function () {
     var client = null
 
     before(function (done) {
