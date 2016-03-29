@@ -1,6 +1,7 @@
 const exec = require('child_process').exec
 const pg = require('pg')
 const Promise = require('bluebird')
+const Server = require('../lib/server')
 var helper = {}
 
 helper.resetDb = function (cb) {
@@ -39,6 +40,10 @@ function dropTable (conn, name) {
   })
 
   return deferred.promise
+}
+
+helper.startServer = function (port, cb) {
+  Server({port: port}, cb)
 }
 
 module.exports = helper

@@ -9,6 +9,7 @@ exports.up = function (db, callback) {
       client_secret: { type: type.STRING },
       name: { type: type.STRING },
       homepage: { type: type.STRING },
+      email: { type: type.STRING },
       description: { type: type.STRING },
       callback: { type: type.STRING },
       created: { type: type.DATE_TIME },

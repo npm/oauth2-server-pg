@@ -7,7 +7,7 @@ const Token = require('../lib/token')
 
 require('chai').should()
 
-describe('Client', function () {
+describe('Client Model', function () {
   before(function (done) {
     helper.resetDb(done)
   })
