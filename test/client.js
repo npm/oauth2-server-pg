@@ -1,4 +1,4 @@
-/* global describe, it, before */
+/* global describe, it, before, beforeEach, afterEach */
 
 const expect = require('chai').expect
 const helper = require('./test-helper')
@@ -11,6 +11,8 @@ describe('Client Model', function () {
   before(function (done) {
     helper.resetDb(done)
   })
+  beforeEach(helper.beginTransaction)
+  afterEach(helper.endTransaction)
 
   it('should allow a new client to be created', function (done) {
     Client.objects.create({
@@ -32,6 +34,10 @@ describe('Client Model', function () {
   it('should not allow two clients with the same name to be created', function (done) {
     Client.objects.create({
       name: 'foo security'
+    }).then((client) => {
+      return Client.objects.create({
+        name: 'foo security'
+      })
     }).catch((err) => {
       err.message.should.match(/duplicate key/)
       return done()
@@ -58,7 +64,7 @@ describe('Client Model', function () {
   describe('tokens', function () {
     it('allows a token associated with a client to be created', function (done) {
       Token.objects.create({
-        client: Client.objects.get({name: 'bar security'}),
+        client: Client.objects.create({name: 'bar security'}),
         user_email: 'some@email.com'
       }).then((token) => {
         token.access_token.should.match(/[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}/)

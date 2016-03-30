@@ -23,6 +23,7 @@ describe('OAuth2 Server', function () {
   describe('oauth: client credentials flow', function () {
     var client = null
 
+    before(helper.beginTransaction)
     before(function (done) {
       Client.objects.create({
         name: 'foo security',
@@ -90,6 +91,8 @@ describe('OAuth2 Server', function () {
         return done()
       })
     })
+
+    after(helper.endTransaction)
   })
 
   after(function () {

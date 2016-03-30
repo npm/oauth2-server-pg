@@ -2,13 +2,24 @@ const exec = require('child_process').exec
 const pg = require('pg')
 const Promise = require('bluebird')
 const Server = require('../lib/server')
+var conn = null
 var helper = {}
+
+pg.defaults.poolSize = 1
+helper.beginTransaction = function (done) {
+  conn.query('BEGIN', done)
+}
+
+helper.endTransaction = function (done) {
+  conn.query('ROLLBACK', done)
+}
 
 helper.resetDb = function (cb) {
   var config = require('../config-test')
 
-  pg.connect(config.connection, function (err, conn, done) {
+  pg.connect(config.connection, function (err, _conn, done) {
     if (err) console.log(err)
+    conn = _conn
 
     Promise.all([
       dropTable(conn, 'migrations'),
