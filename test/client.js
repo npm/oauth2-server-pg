@@ -4,6 +4,7 @@ const expect = require('chai').expect
 const helper = require('./test-helper')
 const Client = require('../lib/client')
 const Token = require('../lib/token')
+const Promise = require('bluebird')
 
 require('chai').should()
 
@@ -32,13 +33,14 @@ describe('Client Model', function () {
   })
 
   it('should not allow two clients with the same name to be created', function (done) {
-    Client.objects.create({
-      name: 'foo security'
-    }).then((client) => {
-      return Client.objects.create({
+    Promise.join(
+      Client.objects.create({
+        name: 'foo security'
+      }),
+      Client.objects.create({
         name: 'foo security'
       })
-    }).catch((err) => {
+    ).catch((err) => {
       err.message.should.match(/duplicate key/)
       return done()
     })
