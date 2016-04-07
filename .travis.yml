@@ -5,4 +5,4 @@ node_js:
   - "node"
 before_script:
   - psql -c 'create database oauth2_server;' -U postgres
-after_script: npm run coverage
+after_success: npm run coverage
