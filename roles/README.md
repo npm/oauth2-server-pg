@@ -8,9 +8,9 @@ across developer machines:
 ```sh
 docker-machine create --driver virtualbox oauth
 docker-machine stop oauth
-VBoxManage modifyvm "oauth2" --natpf1 "tcp-port5432,tcp,,5432,,5432"
+VBoxManage modifyvm "oauth" --natpf1 "tcp-port5432,tcp,,5432,,5432"
 docker-machine start oauth
 docker-compose build
 docker-compose up -d
-psql "dbname=oauth2_server user=postgres host=0.0.0.0 port=5432"
+docker exec -it oauth2serverpg_postgres_1 psql "dbname=oauth2_server user=postgres host=0.0.0.0 port=5432"
 ```
