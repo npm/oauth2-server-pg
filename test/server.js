@@ -14,7 +14,10 @@ describe('OAuth2 Server', function () {
   var server = null
 
   before(function (done) {
-    helper.startServer(9999, function (err, _server) {
+    helper.startServer({
+      port: 9999,
+      privateRoutes: true
+    }, function (err, _server) {
       if (err) return done(err)
       server = _server
       helper.resetDb(done)
