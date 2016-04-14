@@ -4,6 +4,7 @@ const helper = require('./test-helper')
 const Client = require('../lib/client')
 const Token = require('../lib/token')
 const request = require('request')
+const Promise = require('bluebird')
 
 require('chai').should()
 
@@ -13,7 +14,10 @@ describe('OAuth2 Server', function () {
   var server = null
 
   before(function (done) {
-    helper.startServer(9999, function (err, _server) {
+    helper.startServer({
+      port: 9999,
+      privateRoutes: true
+    }, function (err, _server) {
       if (err) return done(err)
       server = _server
       helper.resetDb(done)
@@ -93,6 +97,57 @@ describe('OAuth2 Server', function () {
     })
 
     after(helper.endTransaction)
+  })
+
+  describe('GET /client', function () {
+    before(function (done) {
+      Client.objects.create({
+        name: 'foo security'
+      }).then(function (client) {
+        return Promise.join(
+          Token.objects.create({
+            client: Client.objects.create({name: 'bar security'}),
+            user_email: 'some@email.com'
+          }),
+          // create two tokens associated with the same
+          // client so that we can test an edge-case.
+          Token.objects.create({
+            client: client,
+            user_email: 'another@email.com'
+          }),
+          Token.objects.create({
+            client: client,
+            user_email: 'third@email.com'
+          })
+        )
+      }).then(function () {
+        return done()
+      })
+    })
+
+    it('returns a list of clients if SHARED_FETCH_SECRET is correct', function (done) {
+      process.env.SHARED_FETCH_SECRET = 'foobar'
+      request.get({url: 'http://localhost:9999/client', json: true, qs: {
+        sharedFetchSecret: 'foobar'
+      }}, function (err, res, clients) {
+        if (err) return done(err)
+        clients.length.should.equal(2)
+        clients[0].name.should.equal('foo security')
+        return done()
+      })
+    })
+
+    it('returns a 404 status if SHARED_FETCH_SECRET is incorrect', function (done) {
+      process.env.SHARED_FETCH_SECRET = 'foobar'
+      request.get({url: 'http://localhost:9999/client', json: true, qs: {
+        sharedFetchSecret: 'apple'
+      }}, function (err, res, body) {
+        if (err) return done(err)
+        res.statusCode.should.equal(404)
+        body.should.equal('not found')
+        return done()
+      })
+    })
   })
 
   after(function () {

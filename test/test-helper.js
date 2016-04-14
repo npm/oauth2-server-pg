@@ -53,8 +53,8 @@ function dropTable (conn, name) {
   return deferred.promise
 }
 
-helper.startServer = function (port, cb) {
-  Server({port: port}, cb)
+helper.startServer = function (opts, cb) {
+  Server(opts, cb)
 }
 
 module.exports = helper

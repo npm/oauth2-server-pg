@@ -15,6 +15,11 @@ require('yargs')
         describe: 'oauth grant model to use',
         default: './client-credentials'
       })
+      .option('private-routes', {
+        default: false,
+        type: 'boolean',
+        describe: "should admin-routes, e.g., client list endpoint, be installed (don't run this if service is Internet-facing)"
+      })
   }, function (argv) {
     require('../lib/server')(argv)
   })
