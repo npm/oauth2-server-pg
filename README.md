@@ -10,7 +10,8 @@ A PostgreSQL OAuth 2.0 Server.
 
 **starting server:**
 
-```./bin/oauth2-server-pg.js start --help
+```sh
+./bin/oauth2-server-pg.js start --help
 ```
 
 **generating a client:**
