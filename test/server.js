@@ -1,5 +1,6 @@
-/* global describe, it, before, after */
+/* global describe, it, before, after, beforeEach, afterEach */
 
+const _ = require('lodash')
 const helper = require('./test-helper')
 const Client = require('../lib/client')
 const Token = require('../lib/token')
@@ -99,53 +100,122 @@ describe('OAuth2 Server', function () {
     after(helper.endTransaction)
   })
 
-  describe('GET /client', function () {
-    before(function (done) {
-      Client.objects.create({
-        name: 'foo security'
-      }).then(function (client) {
-        return Promise.join(
-          Token.objects.create({
-            client: Client.objects.create({name: 'bar security'}),
-            user_email: 'some@email.com'
-          }),
-          // create two tokens associated with the same
-          // client so that we can test an edge-case.
-          Token.objects.create({
-            client: client,
-            user_email: 'another@email.com'
-          }),
-          Token.objects.create({
-            client: client,
-            user_email: 'third@email.com'
-          })
-        )
-      }).then(function () {
-        return done()
+  describe('admin routes', function () {
+    beforeEach(helper.beginTransaction)
+    afterEach(helper.endTransaction)
+
+    describe('GET /client', function () {
+      beforeEach(function (done) {
+        Client.objects.create({
+          name: 'foo security'
+        }).then(function (client) {
+          return Promise.join(
+            Token.objects.create({
+              client: Client.objects.create({name: 'bar security'}),
+              user_email: 'some@email.com'
+            }),
+            // create two tokens associated with the same
+            // client so that we can test an edge-case.
+            Token.objects.create({
+              client: client,
+              user_email: 'another@email.com'
+            }),
+            Token.objects.create({
+              client: client,
+              user_email: 'third@email.com'
+            })
+          )
+        }).then(function () {
+          return done()
+        })
+      })
+
+      it('returns a list of clients if SHARED_FETCH_SECRET is correct', function (done) {
+        process.env.SHARED_FETCH_SECRET = 'foobar'
+        request.get({url: 'http://localhost:9999/client', json: true, qs: {
+          sharedFetchSecret: 'foobar'
+        }}, function (err, res, clients) {
+          if (err) return done(err)
+          clients.length.should.equal(2)
+          var names = clients.map((client) => { return client.name })
+          names.should.include('foo security')
+          names.should.include('bar security')
+          return done()
+        })
+      })
+
+      it('returns a 404 status if SHARED_FETCH_SECRET is incorrect', function (done) {
+        process.env.SHARED_FETCH_SECRET = 'foobar'
+        request.get({url: 'http://localhost:9999/client', json: true, qs: {
+          sharedFetchSecret: 'apple'
+        }}, function (err, res, body) {
+          if (err) return done(err)
+          res.statusCode.should.equal(404)
+          body.should.equal('not found')
+          return done()
+        })
       })
     })
 
-    it('returns a list of clients if SHARED_FETCH_SECRET is correct', function (done) {
-      process.env.SHARED_FETCH_SECRET = 'foobar'
-      request.get({url: 'http://localhost:9999/client', json: true, qs: {
-        sharedFetchSecret: 'foobar'
-      }}, function (err, res, clients) {
-        if (err) return done(err)
-        clients.length.should.equal(2)
-        clients[0].name.should.equal('foo security')
-        return done()
+    describe('POST /client', function () {
+      it('creates a new client', function (done) {
+        var payload = {
+          email: 'ben@example.com',
+          name: 'foo-integration',
+          homepage: 'http://example.com',
+          description: 'my awesome integration',
+          callback: 'http://example.com/callback'
+        }
+        process.env.SHARED_FETCH_SECRET = 'foobar'
+        request.post({
+          url: 'http://localhost:9999/client',
+          json: true,
+          qs: {
+            sharedFetchSecret: 'foobar'
+          },
+          body: payload
+        }, (err, res, body) => {
+          if (err) return done(err)
+          res.statusCode.should.equal(201)
+          _.pick(body, [
+            'email',
+            'name',
+            'homepage',
+            'description',
+            'callback'
+          ]).should.deep.equal(payload)
+          return done()
+        })
       })
     })
 
-    it('returns a 404 status if SHARED_FETCH_SECRET is incorrect', function (done) {
-      process.env.SHARED_FETCH_SECRET = 'foobar'
-      request.get({url: 'http://localhost:9999/client', json: true, qs: {
-        sharedFetchSecret: 'apple'
-      }}, function (err, res, body) {
-        if (err) return done(err)
-        res.statusCode.should.equal(404)
-        body.should.equal('not found')
-        return done()
+    describe('POST /client/:id/token', function () {
+      var client = null
+      beforeEach(function (done) {
+        Client.objects.create({
+          name: 'foo security'
+        }).then((_client) => {
+          client = _client
+          return done()
+        })
+      })
+
+      it('generates a token', function (done) {
+        process.env.SHARED_FETCH_SECRET = 'foobar'
+        request.post({
+          url: 'http://localhost:9999/client/' + client.client_id + '/token',
+          json: true,
+          qs: {
+            sharedFetchSecret: 'foobar'
+          },
+          body: {
+            user_email: 'bob@example.com'
+          }
+        }, (err, res, body) => {
+          if (err) return done(err)
+          body.access_token.should.match(/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/)
+          return done()
+        })
       })
     })
   })
