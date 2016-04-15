@@ -17,7 +17,13 @@ A PostgreSQL OAuth 2.0 Server.
 **generating a client:**
 
 ```sh
-./bin/oauth2-server-pg generate-client --help
+POST /client
+```
+
+**generating a token:**
+
+```sh
+POST /client/:client_id/token
 ```
 
 ## License
