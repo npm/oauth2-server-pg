@@ -164,7 +164,9 @@ describe('OAuth2 Server', function () {
           name: 'foo-integration',
           homepage: 'http://example.com',
           description: 'my awesome integration',
-          callback: 'http://example.com/callback'
+          callback: 'http://example.com/callback',
+          webhook: 'http://example.com/webhook',
+          type: 'badge plus'
         }
         process.env.SHARED_FETCH_SECRET = 'foobar'
         request.post({
@@ -182,7 +184,9 @@ describe('OAuth2 Server', function () {
             'name',
             'homepage',
             'description',
-            'callback'
+            'callback',
+            'webhook',
+            'type'
           ]).should.deep.equal(payload)
           return done()
         })

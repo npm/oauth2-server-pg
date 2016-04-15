@@ -12,6 +12,8 @@ exports.up = function (db, callback) {
       email: { type: type.STRING },
       description: { type: type.STRING },
       callback: { type: type.STRING },
+      webhook: { type: type.STRING },
+      type: { type: type.STRING },
       created: { type: type.DATE_TIME },
       deleted: { type: type.DATE_TIME }
     }
