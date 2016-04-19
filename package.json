@@ -1,6 +1,6 @@
 {
   "name": "oauth2-server-pg",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "PostgreSQL and Express powered OAuth 2.0 server",
   "main": "./lib/server.js",
   "bin": "./bin/oauth2-server-pg.js",
