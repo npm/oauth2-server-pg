@@ -8,7 +8,8 @@
     "pretest": "standard",
     "test": "nyc mocha --timeout=5000 test/*.js",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
-    "migrate": "db-migrate --config=./config-test.json --env=connection"
+    "migrate-test": "db-migrate --config=./config-test.json --env=connection",
+    "migrate": "db-migrate --config=./config.json --env=connection"
   },
   "repository": {
     "type": "git",
