@@ -8,7 +8,7 @@ require('yargs')
       .option('port', {
         alias: 'p',
         describe: 'port to run server on',
-        default: 9999
+        default: 8084
       })
       .option('model', {
         alias: 'm',
@@ -23,6 +23,7 @@ require('yargs')
   }, function (argv) {
     require('../lib/server')(argv)
   })
+  .command(require('../lib/install'))
   .help()
   .alias('help', 'h')
   .argv
