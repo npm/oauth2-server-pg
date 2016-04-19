@@ -31,6 +31,7 @@
     "bluebird": "^3.3.4",
     "body-parser": "^1.15.0",
     "db-migrate": "^0.9.23",
+    "express": "^4.13.4",
     "figures": "^1.5.0",
     "lodash": "^4.8.2",
     "moment": "^2.12.0",
