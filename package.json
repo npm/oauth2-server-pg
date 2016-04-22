@@ -9,7 +9,8 @@
     "test": "nyc mocha --timeout=5000 test/*.js",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "migrate-test": "db-migrate --config=./config-test.json --env=connection",
-    "migrate": "db-migrate --config=./config.json --env=connection"
+    "migrate": "db-migrate --config=./config.json --env=connection",
+    "version": "standard-version"
   },
   "repository": {
     "type": "git",
@@ -47,7 +48,8 @@
     "mocha": "^2.4.5",
     "nyc": "^6.1.1",
     "simple-oauth2": "^0.5.1",
-    "standard": "^6.0.8"
+    "standard": "^6.0.8",
+    "standard-version": "^2.1.2"
   },
   "nyc": {
     "exclude": [
