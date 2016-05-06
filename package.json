@@ -30,7 +30,7 @@
   "dependencies": {
     "@npmcorp/express-oauth-server": "^1.0.1",
     "bluebird": "^3.3.4",
-    "body-parser": "^1.15.0",
+    "body-parser": "^1.15.1",
     "db-migrate": "^0.9.23",
     "express": "^4.13.4",
     "figures": "^1.5.0",
