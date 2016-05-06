@@ -78,4 +78,21 @@ describe('Client Model', function () {
       })
     })
   })
+
+  it('allows a client to be deleted', function (done) {
+    var client = null
+    Token.objects.create({
+      client: Client.objects.create({name: 'bar security'}),
+      user_email: 'some@email.com'
+    }).then((token) => {
+      return token.client
+    }).then(function (_client) {
+      client = _client
+      return client.softDelete()
+    }).then(function (dclient) {
+      dclient.client_id.should.equal(client.client_id)
+      dclient.deleted.should.be.gt(0)
+      return done()
+    })
+  })
 })

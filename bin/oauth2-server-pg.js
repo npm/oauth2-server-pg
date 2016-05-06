@@ -24,6 +24,7 @@ require('yargs')
     require('../lib/server')(argv)
   })
   .command(require('../lib/install'))
+  .command(require('../lib/remove'))
   .help()
   .alias('help', 'h')
   .argv
