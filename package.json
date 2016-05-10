@@ -33,7 +33,7 @@
     "body-parser": "^1.15.0",
     "db-migrate": "^0.9.23",
     "express": "^4.13.4",
-    "figures": "^1.5.0",
+    "figures": "^1.6.0",
     "lodash": "^4.8.2",
     "moment": "^2.12.0",
     "ormnomnom": "^2.3.0",
