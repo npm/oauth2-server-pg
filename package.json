@@ -34,6 +34,7 @@
     "db-migrate": "^0.9.23",
     "express": "^4.13.4",
     "figures": "^1.5.0",
+    "is-url": "^1.2.1",
     "lodash": "^4.8.2",
     "moment": "^2.12.0",
     "ormnomnom": "^2.3.0",
