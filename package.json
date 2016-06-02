@@ -50,7 +50,7 @@
     "nyc": "^6.1.1",
     "simple-oauth2": "^0.5.1",
     "standard": "^6.0.8",
-    "standard-version": "^2.1.2"
+    "standard-version": "^2.2.1"
   },
   "nyc": {
     "exclude": [
