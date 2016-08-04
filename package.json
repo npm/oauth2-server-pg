@@ -49,7 +49,7 @@
     "mocha": "^3.0.1",
     "nyc": "^7.0.0",
     "simple-oauth2": "^0.5.1",
-    "standard": "^6.0.8",
+    "standard": "^7.1.2",
     "standard-version": "^2.1.2"
   },
   "nyc": {
