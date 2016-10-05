@@ -34,7 +34,7 @@ helper.resetDb = function (cb) {
     })
     .done(function () {
       // repopulate the schema.
-      exec('npm run-script migrate-test -- up', function (e, stdout, stderr) {
+      exec('npm run migrate-test', function (e, stdout, stderr) {
         done() // return the PG resource.
         return cb() // return to tests.
       })
