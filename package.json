@@ -5,8 +5,9 @@
   "main": "./lib/server.js",
   "bin": "./bin/oauth2-server-pg.js",
   "scripts": {
-    "pretest": "standard",
+    "pretest": "standard; if pgrep \"docker\" > /dev/null; then (docker rm -f oauth2serverpg_postgres_1 || true) && docker run --name oauth2serverpg_postgres_1 -e POSTGRES_DB=oauth2_server -p 5432:5432/tcp -d postgres:9.4 postgres; sleep 5; fi",
     "test": "nyc mocha --timeout=5000 test/*.js",
+    "posttest": "if pgrep \"docker\" > /dev/null; then docker rm -f oauth2serverpg_postgres_1; fi",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "migrate-test": "db-migrate --config=./config-test.json --env=connection",
     "migrate": "db-migrate --config=./config.json --env=connection",
