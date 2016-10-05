@@ -11,7 +11,7 @@
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "migrate-test": "db-migrate --config=./config-test.json --env=connection",
     "migrate": "db-migrate --config=./config.json --env=connection",
-    "version": "standard-version"
+    "release": "standard-version"
   },
   "repository": {
     "type": "git",
