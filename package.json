@@ -38,7 +38,7 @@
     "body-parser": "^1.15.0",
     "db-migrate": "^0.9.23",
     "express": "^4.13.4",
-    "figures": "^1.5.0",
+    "figures": "^2.0.0",
     "is-url": "^1.2.1",
     "lodash": "^4.16.4",
     "moment": "^2.12.0",
