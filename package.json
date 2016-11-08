@@ -5,16 +5,16 @@
   "main": "./lib/server.js",
   "bin": "./bin/oauth2-server-pg.js",
   "scripts": {
-    "pretest": "standard; if pgrep \"docker\" > /dev/null; then (npm run pg-test-down || true) && npm run pg-test-up; sleep 5; fi",
-    "test": "nyc mocha --timeout=5000 test/*.js",
     "posttest": "if pgrep \"docker\" > /dev/null; then npm run pg-test-down; fi",
+    "pretest": "if pgrep \"docker\" > /dev/null; then (npm run pg-test-down || true) && npm run pg-test-up; sleep 5; fi",
+    "test": "nyc mocha --timeout=5000 test/*.js",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "pg-test-up": "docker run --name oauth2serverpg_postgres_1 -e POSTGRES_DB=oauth2_server -p 5432:5432/tcp -d postgres:9.4 postgres",
     "pg-test-down": "docker rm -f oauth2serverpg_postgres_1",
     "pg-test": "npm run pg-test-up; sleep 5; npm run migrate-test",
-    "migrate-test": "db-migrate --config=./config-test.json --env=connection up",
+    "migrate-test": "db-migrate --config=./config-test.js --env=connection up",
     "psql": "docker exec -it oauth2serverpg_postgres_1 psql -U postgres -d oauth2_server",
-    "migrate": "db-migrate --config=./config.json --env=connection",
+    "migrate": "db-migrate --config=./config.js --env=connection",
     "release": "standard-version"
   },
   "repository": {
@@ -52,7 +52,7 @@
     "chai": "^3.5.0",
     "coveralls": "^2.11.8",
     "mocha": "^3.0.1",
-    "nyc": "^7.0.0",
+    "nyc": "^8.4.0",
     "simple-oauth2": "^0.5.1",
     "standard": "^7.1.2",
     "standard-version": "^3.0.0"
@@ -60,7 +60,8 @@
   "nyc": {
     "exclude": [
       "**/migrations/**",
-      "**/test/**"
+      "**/test/**",
+      "node_modules"
     ]
   }
 }
