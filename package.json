@@ -14,7 +14,7 @@
     "pg-test": "npm run pg-test-up; sleep 5; npm run migrate-test",
     "migrate-test": "db-migrate --config=./config-test.js --env=connection up",
     "psql": "docker exec -it oauth2serverpg_postgres_1 psql -U postgres -d oauth2_server",
-    "migrate": "db-migrate --config=./config.js --env=connection",
+    "migrate": "db-migrate --config=./config-development.js --env=connection",
     "release": "standard-version"
   },
   "repository": {
