@@ -45,7 +45,7 @@
     "ormnomnom": "^2.3.0",
     "pg": "^4.5.1",
     "request": "^2.69.0",
-    "uuid": "^2.0.1",
+    "uuid": "^3.0.0",
     "yargs": "^6.0.0"
   },
   "devDependencies": {
