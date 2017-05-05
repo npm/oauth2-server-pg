@@ -52,7 +52,7 @@
     "chai": "^3.5.0",
     "coveralls": "^2.11.8",
     "mocha": "^3.0.1",
-    "nyc": "^8.4.0",
+    "nyc": "^10.3.2",
     "simple-oauth2": "^0.5.1",
     "standard": "^7.1.2",
     "standard-version": "^3.0.0"
